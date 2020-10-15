@@ -19,9 +19,9 @@ const Home = () => {
         body: JSON.stringify({
           long_url: link
         }),
-        // headers: {
-        //   'Content-Type': 'application/json'
-        // }
+        headers: {
+          'Content-Type': 'application/json'
+        }
 
       })
       .then(res => res.json())
