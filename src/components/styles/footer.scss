@@ -1,0 +1,38 @@
+.footer{
+    background-color: $neutral-dark-violet;
+    padding: 70px 10%;
+    display: flex;
+    justify-content: space-between;
+    color: #ffffff;
+    .logo{
+        width: 25%;
+    }
+
+    .links{
+        width: 40%;
+        display: flex;
+        justify-content: space-between;
+        div{
+            display: flex;
+            flex-direction: column;
+            h5{
+                margin-top: 0;
+                font-size: 18px;
+            }
+            a{
+                margin-bottom: 10px;
+                cursor: pointer;
+            }
+        }
+    }
+    .socials{
+        display: flex;
+        justify-content: space-between;
+        width: 15%;
+        img{
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+        }
+    }
+}

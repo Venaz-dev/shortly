@@ -1,0 +1,45 @@
+.box-shadow{
+  box-shadow: 0px 3px 10px #00000029;
+}
+
+$primary-cyan : hsl(180, 66%, 49%);
+$primary-violet : hsl(257, 27%, 26%);
+$secondary :hsl(0, 87%, 67%);
+
+$neutral-gray: hsl(0, 0%, 75%);
+$neutral-gray-violet : hsl(257, 7%, 63%);
+$neutral-dark-blue : hsl(255, 11%, 22%);
+$neutral-dark-violet : hsl(260, 8%, 14%);
+
+.btn{
+  background-color: $primary-cyan;
+  border: none;
+  border-radius: 50px;
+  width: 130px;
+  color: white;
+  padding: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .5s;
+  &:focus{
+    outline: none;
+  }
+
+  &:hover{
+    background-color : #2acfcfb4;;
+  }
+}
+
+input{
+  border: none;
+  padding: 0 20px;
+  &:focus{
+    outline: none;
+  }
+}
+
+
+@import "./components/styles/nav.scss";
+@import "./components//styles/home.scss";
+@import "./components//styles//footer.scss";
