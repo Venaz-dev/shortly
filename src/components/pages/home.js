@@ -3,6 +3,7 @@ import React, { useState } from "react";
 const Home = () => {
   const [link, setLink] = useState("");
   const [errState, setError] = useState(false)
+  const token = 'rvVVVO0T3j7CsKw1EvnPe8t0MkLp5yQGjboOZEJ2'
 
   const handleChange = (event) => {
     setLink(event.target.value);
@@ -13,8 +14,38 @@ const Home = () => {
       setError(true)
     }else{
       setError(false)
+      fetch(`https://shortly.link/api/links/create?api_token=${token}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          long_url: link
+        }),
+        // headers: {
+        //   'Content-Type': 'application/json'
+        // }
+
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        createShortLink(link, data.link.short_url)
+      })
+      .catch((err) => console.log(err))
     }
   }
+
+  function createShortLink(link, hashid) {
+    let shortLink = "https://rel.ink/" + hashid;
+    console.log(link)
+    console.log(shortLink)
+
+    // prepare data for local storage
+    let data = {
+        link, // original link
+        shortLink // shortened link
+    }
+
+    // store(data)
+}
   return (
     <div className="homepage">
       <div className="get-started-holder">
@@ -38,7 +69,7 @@ const Home = () => {
             type="text"
             value={link}
             onChange={handleChange}
-            className={errState && "input-error"}
+            className={errState ? "input-error" : null}
             placeholder="Shorten a link here..."
           />
           <button className="btn" onClick={handleSubmit}>Shorten It!</button>
