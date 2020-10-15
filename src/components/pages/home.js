@@ -1,51 +1,115 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Home = () => {
   const [link, setLink] = useState("");
-  const [errState, setError] = useState(false)
-  const token = 'rvVVVO0T3j7CsKw1EvnPe8t0MkLp5yQGjboOZEJ2'
+  const [prevLinks, setPrevLinks] = useState(get())
+  const [errState, setError] = useState(false);
+  const token = "rvVVVO0T3j7CsKw1EvnPe8t0MkLp5yQGjboOZEJ2";
+
+  let linkRequest = {
+    destination: "https://www.youtube.com/channel/UCHK4HD0ltu1-I212icLPt3g",
+    domain: { fullName: "rebrand.ly" },
+    //, slashtag: "A_NEW_SLASHTAG"
+    //, title: "Rebrandly YouTube channel"
+  };
+
+  let requestHeaders = {
+    "Content-Type": "application/json",
+    apikey: "YOUR_API_KEY",
+    workspace: "YOUR_WORKSPACE_ID",
+  };
 
   const handleChange = (event) => {
     setLink(event.target.value);
   };
 
+  const checkLink = () => {
+    return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(
+      link
+    );
+  };
+
   const handleSubmit = () => {
-    if(link === ""){
-      setError(true)
-    }else{
-      setError(false)
-      fetch(`https://shortly.link/api/links/create?api_token=${token}`, {
-        method: 'POST',
-        body: JSON.stringify({
-          long_url: link
-        }),
+    if (link === "") {
+      setError(true);
+    } else if (!checkLink()) {
+      setError(true);
+    } else {
+      setError(false);
+
+      fetch("https://api-ssl.bitly.com/v4/shorten", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
-        }
-
+          Authorization: "319a3623916b3845f689f709a3c123f14824e19f",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          long_url: link,
+          domain: "bit.ly",
+        }),
       })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data)
-        createShortLink(link, data.link.short_url)
-      })
-      .catch((err) => console.log(err))
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          createShortLink(link, data.link);
+        })
+        .catch((err) => console.log(err));
     }
-  }
+  };
 
-  function createShortLink(link, hashid) {
-    let shortLink = "https://rel.ink/" + hashid;
-    console.log(link)
-    console.log(shortLink)
+  function createShortLink(link, shortLink) {
+    console.log(link);
+    console.log(shortLink);
 
     // prepare data for local storage
     let data = {
-        link, // original link
-        shortLink // shortened link
-    }
+      link, // original link
+      shortLink, // shortened link
+    };
 
-    // store(data)
-}
+    store(data)
+  }
+  // store new items
+  function store(item) {
+    let items = get(); // look for any previously stored links
+    // let items = []
+    let previous = prevLinks
+    
+    if(items.length === 5){
+      items.push(item); 
+      items.pop()
+      previous.push(item)
+      previous.pop()
+    }else{
+      items.push(item);
+      previous.push(item) 
+    }
+    // add new links to existing links
+    console.log("console", items);
+    localStorage.setItem("items", JSON.stringify(items)); // locally store updated items array
+    
+
+    setPrevLinks(previous)
+  }
+
+  // Look for Items in local storage
+  function get() {
+    let items;
+    // check for previously stored items
+
+    if (localStorage.getItem("items") == null) {
+      items = [];
+      // if no items found in local storage create array
+    } else {
+      items = JSON.parse(localStorage.getItem("items"));
+      // if items found in local storage retrieve array
+    }
+    return items;
+  }
+
+  useEffect(() => {
+    console.log(prevLinks)
+  }, [prevLinks])
   return (
     <div className="homepage">
       <div className="get-started-holder">
@@ -64,22 +128,23 @@ const Home = () => {
 
       <div className="statistics">
         <div className="shorten-holder">
-        <div className="shorten">
-          <input
-            type="text"
-            value={link}
-            onChange={handleChange}
-            className={errState ? "input-error" : null}
-            placeholder="Shorten a link here..."
-          />
-          <button className="btn" onClick={handleSubmit}>Shorten It!</button>
+          <div className="shorten">
+            <input
+              type="text"
+              value={link}
+              onChange={handleChange}
+              className={errState ? "input-error" : null}
+              placeholder="Shorten a link here..."
+            />
+            <button className="btn" onClick={handleSubmit}>
+              Shorten It!
+            </button>
+            {errState && <p className="error">Please add a link</p>}
+          </div>
+          <div className="shortened-links"></div>
           {
-            errState && <p className="error">Please add a link</p>
+            prevLinks.map(link => <p>{link.shortLink}</p>)
           }
-        </div>
-        <div className="shortened-links">
-
-        </div>
         </div>
         <div className="header-text">
           <h1>Advanced Statistics</h1>
