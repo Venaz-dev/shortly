@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const Home = () => {
   const [link, setLink] = useState("");
-  const [prevLinks, setPrevLinks] = useState(get())
+  const [prevLinks, setPrevLinks] = useState(get());
   const [errState, setError] = useState(false);
+  const [selectedLink, setSelectLink] = useState();
+  const selected = useRef();
+  const shortenBtn = useRef();
   const token = "rvVVVO0T3j7CsKw1EvnPe8t0MkLp5yQGjboOZEJ2";
+
+  const [disable, setDisable] = useState(false);
 
   let linkRequest = {
     destination: "https://www.youtube.com/channel/UCHK4HD0ltu1-I212icLPt3g",
@@ -36,7 +41,8 @@ const Home = () => {
       setError(true);
     } else {
       setError(false);
-
+      setDisable(true);
+      shortenBtn.current.style.animation = "pulse-black 2s infinite;"
       fetch("https://api-ssl.bitly.com/v4/shorten", {
         method: "POST",
         headers: {
@@ -51,45 +57,45 @@ const Home = () => {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
+          setDisable(false);
           createShortLink(link, data.link);
+          shortenBtn.current.style.animation = "none"
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          setDisable(false);
+          shortenBtn.current.style.animation = "none"
+        });
     }
+    setLink("");
   };
 
   function createShortLink(link, shortLink) {
-    console.log(link);
-    console.log(shortLink);
-
     // prepare data for local storage
     let data = {
       link, // original link
       shortLink, // shortened link
     };
 
-    store(data)
+    store(data);
   }
   // store new items
   function store(item) {
     let items = get(); // look for any previously stored links
     // let items = []
-    let previous = prevLinks
-    
-    if(items.length === 5){
-      items.push(item); 
-      items.pop()
-      previous.push(item)
-      previous.pop()
-    }else{
-      items.push(item);
-      previous.push(item) 
+    items.push(item);
+
+    if (items.length > 5) {
+      items.reverse();
+      items.pop();
+      // items.reverse();
     }
+
     // add new links to existing links
     console.log("console", items);
     localStorage.setItem("items", JSON.stringify(items)); // locally store updated items array
-    
 
-    setPrevLinks(previous)
+    setPrevLinks(items);
   }
 
   // Look for Items in local storage
@@ -104,12 +110,22 @@ const Home = () => {
       items = JSON.parse(localStorage.getItem("items"));
       // if items found in local storage retrieve array
     }
-    return items;
+    return items.reverse();
   }
 
-  useEffect(() => {
-    console.log(prevLinks)
-  }, [prevLinks])
+  const copy = (value) => {
+    setSelectLink(value);
+    let selectLink = selected.current;
+    var range = document.createRange();
+    range.selectNode(selectLink);
+    window.getSelection().addRange(range);
+
+    // selected.current.select()
+    setTimeout(() => {
+      document.execCommand("copy");
+    }, 1000);
+  };
+
   return (
     <div className="homepage">
       <div className="get-started-holder">
@@ -136,15 +152,32 @@ const Home = () => {
               className={errState ? "input-error" : null}
               placeholder="Shorten a link here..."
             />
-            <button className="btn" onClick={handleSubmit}>
+            <button
+              className="btn"
+              onClick={handleSubmit}
+              disabled={disable}
+              ref={shortenBtn}
+            >
               Shorten It!
             </button>
             {errState && <p className="error">Please add a link</p>}
           </div>
-          <div className="shortened-links"></div>
-          {
-            prevLinks.map(link => <p>{link.shortLink}</p>)
-          }
+          <div className="shortened-links">
+            {prevLinks.map((link) => (
+              <div className="short-link">
+                <div className="links">
+                  <p className="long">{link.link}</p>
+                  <p className="short">{link.shortLink}</p>
+                </div>
+                <button className="btn" onClick={() => copy(link.shortLink)}>
+                  Copy
+                </button>
+              </div>
+            ))}
+            <p style={{ display: "none " }} ref={selected}>
+              {selectedLink}
+            </p>
+          </div>
         </div>
         <div className="header-text">
           <h1>Advanced Statistics</h1>
