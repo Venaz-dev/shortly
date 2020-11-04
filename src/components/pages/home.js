@@ -34,6 +34,25 @@ const Home = () => {
     );
   };
 
+  
+  const copyLink = (text, index) => {
+    let dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = text;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+    let newArr = [...prevLinks]
+    newArr[index].copied = true
+    setPrevLinks(newArr)
+    
+    setTimeout(() => {
+      let newArr = [...prevLinks]
+      newArr[index].copied = false
+      setPrevLinks(newArr)
+    }, 2000)
+  };
+
   const handleSubmit = () => {
     if (link === "") {
       setError(true);
@@ -42,7 +61,7 @@ const Home = () => {
     } else {
       setError(false);
       setDisable(true);
-      shortenBtn.current.style.animation = "pulse-black 2s infinite;"
+      shortenBtn.current.style.animation = "pulse-black 2s infinite;";
       fetch("https://api-ssl.bitly.com/v4/shorten", {
         method: "POST",
         headers: {
@@ -59,12 +78,12 @@ const Home = () => {
           console.log(data);
           setDisable(false);
           createShortLink(link, data.link);
-          shortenBtn.current.style.animation = "none"
+          shortenBtn.current.style.animation = "none";
         })
         .catch((err) => {
           console.log(err);
           setDisable(false);
-          shortenBtn.current.style.animation = "none"
+          shortenBtn.current.style.animation = "none";
         });
     }
     setLink("");
@@ -75,6 +94,7 @@ const Home = () => {
     let data = {
       link, // original link
       shortLink, // shortened link
+      copied: false,
     };
 
     store(data);
@@ -113,18 +133,7 @@ const Home = () => {
     return items.reverse();
   }
 
-  const copy = (value) => {
-    setSelectLink(value);
-    let selectLink = selected.current;
-    var range = document.createRange();
-    range.selectNode(selectLink);
-    window.getSelection().addRange(range);
-
-    // selected.current.select()
-    setTimeout(() => {
-      document.execCommand("copy");
-    }, 1000);
-  };
+  
 
   return (
     <div className="homepage">
@@ -163,14 +172,17 @@ const Home = () => {
             {errState && <p className="error">Please add a link</p>}
           </div>
           <div className="shortened-links">
-            {prevLinks.map((link) => (
-              <div className="short-link">
+            {prevLinks.map((link, i) => (
+              <div key={i} className="short-link">
                 <div className="links">
                   <p className="long">{link.link}</p>
                   <p className="short">{link.shortLink}</p>
                 </div>
-                <button className="btn" onClick={() => copy(link.shortLink)}>
-                  Copy
+                <button
+                  className={`${link.copied && 'active'} btn `}
+                  onClick={() => copyLink(link.shortLink, i)}
+                >
+                  {link.copied ? "Copied" : "Copy"}
                 </button>
               </div>
             ))}

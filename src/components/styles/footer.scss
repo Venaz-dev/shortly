@@ -35,4 +35,25 @@
             cursor: pointer;
         }
     }
+    @media(max-width: 800px){
+        flex-direction: column;
+        padding: 70px 5%;
+        .logo{
+            margin-bottom: 10px;
+        }
+        .links{
+            flex-direction: column;
+            div{
+                margin-bottom: 10px;
+               width: 100%;
+            }
+            a{
+                opacity: 0.6;
+            }
+        }
+        .socials{
+            margin-top: 20px;
+            width: 50%;
+        }
+    }
 }

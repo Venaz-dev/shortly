@@ -7,10 +7,10 @@ nav {
     left: 0;
     display: flex;
     justify-content: space-between;
-
+    backdrop-filter: blur(40px);
     padding: 0 10%;
     box-sizing: border-box;
-    background-color: white;
+    background-color: #ffffff93;
 }
 
 .links-holder {
@@ -31,7 +31,9 @@ nav {
         color: $neutral-gray-violet;
         font-size: 18px;
 
-        a {}
+        a {
+            cursor: pointer;
+        }
     }
 }
 
@@ -56,5 +58,58 @@ nav {
     .signup {
         color: #fff;
         background-color: $primary-cyan;
+        height: 50px;
+        width: fit-content;
+    }
+}
+.off-canvas{
+    display: none;
+}
+.burger-menu{
+    display: none;
+}
+
+@media(max-width: 800px){
+    nav{
+        padding: 0 5%;
+        height: 80px;
+    }
+    .burger-menu{
+        display: flex;
+        align-items: center;
+        button{
+            height: fit-content;
+            font-size: 35px;
+            background: none;
+            // background-color: #fff;
+            border: none;
+            color: $neutral-dark-violet;
+            transform: translateY(-5px);
+        }
+    }
+    .links-holder{
+        .nav-links{
+            display: none;
+        }
+    }
+    .login-links{
+        display: none;
+    }
+    .off-canvas{
+        display: block;
+        position: fixed;
+       height: 100vh;
+       width: 100vw;
+        top: 0;
+        left: 0;
+        background-color: #fff;
+        transform: translateX(100vw);
+        .nav-links{
+            display: flex;
+            flex-direction: column;
+        }
+        .login-links{
+            display: inline;
+        }
     }
 }

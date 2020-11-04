@@ -103,8 +103,13 @@
                     // animation: pulse-black 2s infinite;
                 }
 
+                .active {
+
+                    background-color: $neutral-dark-violet !important;
+                }
+
                 button:disabled,
-                button[disabled]{
+                button[disabled] {
                     background-color: $neutral-gray-violet;
                 }
             }
@@ -148,6 +153,11 @@
                     .btn {
                         border-radius: 10px;
                         height: 50%;
+                    }
+
+                    .active {
+
+                        background-color: $neutral-dark-blue !important;
                     }
                 }
             }
@@ -269,7 +279,109 @@
             font-weight: 700;
         }
     }
+
+    @media(max-width: 500px) {
+        .get-started-holder {
+            flex-direction: column-reverse;
+            padding: 0 10px;
+            padding-top: 20px;
+            margin-bottom: 30px;
+
+            .text {
+                width: 100% !important;
+
+                h1 {
+                    font-size: 30px;
+                }
+            }
+
+            .image {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        .statistics {
+            padding: 0;
+
+            .shorten-holder {
+                transform: translateY(0);
+
+                .shorten {
+                    border-radius: 0;
+                    flex-direction: column;
+                    height: 200px;
+
+                    input {
+                        width: 90%;
+                        height: 50px;
+                        margin-bottom: 20px;
+                    }
+
+                    .btn {
+                        height: 50px;
+                        margin: 0;
+                    }
+                }
+            }
+
+            .shortened-links {
+                padding-top: 30px;
+
+                .short-link {
+                    padding: 0 10px !important;
+
+                    .links {
+                        flex-direction: column;
+
+                        .long {
+                            max-width: 100% !important;
+                        }
+                    }
+                    
+                }
+            }
+            .header-text{
+                p{
+                    width: 100%;
+                    padding: 0 10px;
+                }
+            }
+            .content{
+                .divider{
+                    display: none;
+                    
+                }
+                .cards{
+                     flex-direction: column;
+                     padding-bottom: 50px;
+                     .card{
+                         width: 100%;
+                         &:last-child {
+                            transform: none
+                        }
+    
+                        &:nth-child(2) {
+                            transform: none;
+                        }
+    
+                     }   
+                }
+            }
+        }
+        .boost{
+            h1{
+                font-size: 30px;
+            }
+        }
+    }
 }
+
+
 
 @keyframes pulse-black {
     0% {
