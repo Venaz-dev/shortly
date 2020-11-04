@@ -36,6 +36,7 @@ const Nav = () => {
       </div>
 
       <div ref={menuRef}  className="off-canvas">
+        <span className="close" onClick={toogleMenu}>&#10005;</span>
         <div className="nav-links">
           <a>Features</a>
           <a>Pricing </a>

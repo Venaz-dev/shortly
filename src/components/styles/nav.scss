@@ -52,7 +52,7 @@ nav {
         width: 100px;
         text-align: center;
 
-        
+
     }
 
     .signup {
@@ -62,22 +62,26 @@ nav {
         width: fit-content;
     }
 }
-.off-canvas{
-    display: none;
-}
-.burger-menu{
+
+.off-canvas {
     display: none;
 }
 
-@media(max-width: 800px){
-    nav{
+.burger-menu {
+    display: none;
+}
+
+@media(max-width: 800px) {
+    nav {
         padding: 0 5%;
         height: 80px;
     }
-    .burger-menu{
+
+    .burger-menu {
         display: flex;
         align-items: center;
-        button{
+
+        button {
             height: fit-content;
             font-size: 35px;
             background: none;
@@ -85,31 +89,60 @@ nav {
             border: none;
             color: $neutral-dark-violet;
             transform: translateY(-5px);
+            &:focus{
+                outline: none;
+            }
         }
     }
-    .links-holder{
-        .nav-links{
+
+    .links-holder {
+        .nav-links {
             display: none;
         }
     }
-    .login-links{
+
+    .login-links {
         display: none;
     }
-    .off-canvas{
+
+    .off-canvas {
+        padding: 0 5%;
+        padding-top: 50px;
         display: block;
         position: fixed;
-       height: 100vh;
-       width: 100vw;
+        height: 100vh;
+        width: 100vw;
         top: 0;
         left: 0;
         background-color: #fff;
         transform: translateX(100vw);
-        .nav-links{
+        transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 35px;
+            cursor: pointer;
+        }
+
+        .nav-links {
             display: flex;
             flex-direction: column;
+            font-size: 35px;
         }
-        .login-links{
-            display: inline;
+
+        .login-links {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            font-size: 25px;
+            margin-top: 50px;
+
+            a {
+                width: 100%;
+                text-align: left;
+            }
         }
     }
 }
